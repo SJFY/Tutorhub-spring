@@ -6,6 +6,7 @@ import java.util.Set;
 
 @Entity
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -13,13 +14,35 @@ public class User {
     private String lastName;
     private String email;
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Course> courses = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    private Course teachCourse;
+
+    @ManyToMany(mappedBy = "students")
+    private Set<Course> learnCourse = new HashSet<>();
+
+
 
     public User(String email, String firstName, String lastName) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+
+    public Set<Course> getLearnCourse() {
+        return learnCourse;
+    }
+
+    public void setLearnCourse(Set<Course> learnCourse) {
+        this.learnCourse = learnCourse;
+    }
+
+    public Course getTeachCourse() {
+        return teachCourse;
+    }
+
+    public void setTeachCourse(Course teachCourse) {
+        this.teachCourse = teachCourse;
     }
 
     public void setId(Long id) {
@@ -54,14 +77,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Set<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
-    }
-
     public User() {
     }
 
@@ -69,7 +84,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.courses = courses;
+        this.learnCourse = courses;
     }
 
     @Override
@@ -94,7 +109,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", courses=" + courses +
+                ", courses=" + learnCourse +
                 '}';
     }
 }

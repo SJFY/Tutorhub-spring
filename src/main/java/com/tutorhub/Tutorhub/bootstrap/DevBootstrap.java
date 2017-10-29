@@ -6,17 +6,17 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import com.tutorhub.Tutorhub.repositories.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //remember to add the component
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
-    private AuthorRepository authorRepository;
-    private BookRepository bookRepository;
+
     private CourseRepository courseRepository;
     private UserRepository userRepository;
 
-    public DevBootstrap(AuthorRepository authorRepository, BookRepository bookRepository, CourseRepository courseRepository, UserRepository userRepository) {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
+    public DevBootstrap(CourseRepository courseRepository, UserRepository userRepository) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
     }
@@ -25,30 +25,45 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         initData();
     }
+
     private void initData(){
-        //Eric
-        Author eric = new Author("Eric", "Evans");
-        Book ddd = new Book("Domain Driven Design", "1234", "Harper Collins");
-        eric.getBooks().add(ddd);
-        ddd.getAuthors().add(eric);
-
-        authorRepository.save(eric);
-        bookRepository.save(ddd);
-
-
-        //Rod
-        Author rod = new Author("Rod", "Johnson");
-        Book noEJB = new Book("J2EE Development without EJB", "23444", "Wrox" );
-        rod.getBooks().add(noEJB);
-        noEJB.getAuthors().add(rod);
-
-        authorRepository.save(rod);
-        bookRepository.save(noEJB);
 
         User zoe = new User("jiefeis2@illinois.edu", "Zoe", "shi");
-        userRepository.save(zoe);
 
+        User Fangxiaozhi = new User("fyu10@illinois.edu", "Fangxiaozhi", "Yu");
+        User will = new User("ws@gmail.com", "Will", "Smith");
+
+
+
+
+        Course java = new Course("Java Spring framework", "Home", "Best ever", 100);
         Course dance = new Course("Dance 101", "Hobby", "Best ever", 10);
+//        zoe.setCourse(dance);
+//        dance.setTeacher(zoe);
+
+        dance.setTeacher(zoe);
+        zoe.setTeachCourse(dance);
+
+
+
+        dance.getStudents().add(zoe);
+       java.getStudents().add(zoe);
+        java.getStudents().add(Fangxiaozhi);
+        java.getStudents().add(will);
+
+//        zoe.getLearnCourse().add(java);
+//        zoe.getLearnCourse().add(dance);
+//        Fangxiaozhi.getLearnCourse().add(java);
+//        will.getLearnCourse().add(java);
+
+
+        java.setTeacher(zoe);
+        zoe.setTeachCourse(java);
+
         courseRepository.save(dance);
+        userRepository.save(zoe);
+        courseRepository.save(java);
+        userRepository.save(Fangxiaozhi);
+        userRepository.save(will);
     }
 }

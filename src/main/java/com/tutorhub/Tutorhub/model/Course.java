@@ -16,16 +16,46 @@ public class Course {
     private String description;
     private int price;
 
-    @ManyToMany
-    @JoinTable(name = "user-course", joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "teacher_course", joinColumns = @JoinColumn(name = "course_name"),
+        inverseJoinColumns = @JoinColumn(name = "teacher_name"))
+    private User teacher;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "students_course", joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    private Set<User> students = new HashSet<>();
 
     public Course(String name, String category, String description, int price) {
         this.name = name;
         this.category = category;
         this.description = description;
         this.price = price;
+    }
+
+    public Course(String name, String category, String description, int price, User teacher, Set<User> users) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.price = price;
+        this.teacher = teacher;
+        this.students = users;
+    }
+
+    public Set<User> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<User> students) {
+        this.students = students;
+    }
+
+    public User getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
     }
 
     public Long getId() {
@@ -68,13 +98,6 @@ public class Course {
         this.price = price;
     }
 
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
 
     public Course() {
     }
@@ -84,7 +107,7 @@ public class Course {
         this.category = category;
         this.description = description;
         this.price = price;
-        this.users = users;
+        this.students = users;
     }
 
     @Override
@@ -110,7 +133,7 @@ public class Course {
                 ", category='" + category + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", users=" + users +
+                ", users=" + students +
                 '}';
     }
 }
